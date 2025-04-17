@@ -4,8 +4,11 @@
 #include "PlayerPawn.h"
 #include "Components/BoxComponent.h"
 #include "Components/StaticMeshComponent.h"
+#include "Components/ArrowComponent.h"
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
+#include "Bullet.h"
+#include "Kismet/GameplayStatics.h"
 
 // Sets default values
 APlayerPawn::APlayerPawn()
@@ -20,6 +23,9 @@ APlayerPawn::APlayerPawn()
 
 	MeshComp = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("My Static Mesh"));
 	MeshComp->SetupAttachment(BoxComp);
+
+	FirePosition = CreateDefaultSubobject<UArrowComponent>(TEXT("Fire Position"));
+	FirePosition->SetupAttachment(BoxComp);
 }
 
 // Called when the game starts or when spawned
@@ -61,6 +67,7 @@ void APlayerPawn::SetupPlayerInputComponent(UInputComponent* PlayerInputComponen
 		EnhancedInputComp->BindAction(IA_Horizontal, ETriggerEvent::Completed, this, &APlayerPawn::OnInputHorizontal);
 		EnhancedInputComp->BindAction(IA_Vertical, ETriggerEvent::Triggered, this, &APlayerPawn::OnInputVertical);
 		EnhancedInputComp->BindAction(IA_Vertical, ETriggerEvent::Completed, this, &APlayerPawn::OnInputVertical);
+		EnhancedInputComp->BindAction(IA_Fire, ETriggerEvent::Started, this, &APlayerPawn::Fire);
 	}
 }
 
@@ -74,5 +81,14 @@ void APlayerPawn::OnInputVertical(const FInputActionValue& Value)
 {
 	float Vertical = Value.Get<float>();
 	UE_LOG(LogTemp, Warning, TEXT("Vertical: %f"), Vertical);
+}
+
+void APlayerPawn::Fire()
+{
+	ABullet* Bullet GetWorld()->SpawnActor<ABullet>(BulletFactory,
+		FirePosition->GetComponentLocation(), FirePosition->GetComponentLocation());
+
+	
+	UGameplayStatics::PlaySound2D(GetWorld(), FireSound);
 }
 

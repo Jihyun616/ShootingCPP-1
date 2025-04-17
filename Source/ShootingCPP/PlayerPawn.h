@@ -44,6 +44,18 @@ public:
 	class UStaticMeshComponent* MeshComp;
 
 	UPROPERTY(EditAnywhere)
+	float MoveSpeed = 500.0f;
+
+	UPROPERTY (EditAnywhere)
+	class UArrowComponent* FirePosition;
+
+	UPROPERTY (EditAnywhere)
+	TSubclassOf<class ABullet> BulletFactory;
+
+	UPROPERTY(EditAnywhere)
+	class USoundBase* FireSound;
+
+	UPROPERTY(EditAnywhere)
 	class UInputMappingContext* IMC_PlayerInput;
 
 	UPROPERTY(EditAnywhere)
@@ -52,7 +64,11 @@ public:
 	UPROPERTY(EditAnywhere)
 	class UInputAction* IA_Vertical;
 
+	UPROPERTY(EditAnywhere)
+	class UInputAction* IA_Fire;
+
 private:
 	void OnInputHorizontal(const struct FInputActionValue& Value);
 	void OnInputVertical(const struct FInputActionValue& Value);
+	void Fire();
 };
