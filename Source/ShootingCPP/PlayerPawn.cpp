@@ -4,6 +4,8 @@
 #include "PlayerPawn.h"
 #include "Components/BoxComponent.h"
 #include "Components/StaticMeshComponent.h"
+#include "EnhancedInputComponent.h"
+#include "EnhancedInputSubsystems.h"
 
 // Sets default values
 APlayerPawn::APlayerPawn()
@@ -25,6 +27,18 @@ void APlayerPawn::BeginPlay()
 {
 	Super::BeginPlay();
 	
+	APlayerController* PlayerController = GetWorld()->GetFirstPlayerController();
+
+	if (PlayerController != nullptr)
+	{
+		UEnhancedInputLocalPlayerSubsystem* SubSystem =
+			ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(PlayerController->GetLocalPlayer());
+
+		if (SubSystem != nullptr)
+		{
+			SubSystem->AddMappingContext(IMC_PlayerInput, 0);
+		}
+	}
 }
 
 // Called every frame
@@ -39,5 +53,26 @@ void APlayerPawn::SetupPlayerInputComponent(UInputComponent* PlayerInputComponen
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 
+	UEnhancedInputComponent* EnhancedInputComp = Cast<UEnhancedInputComponent>(PlayerInputComponent);
+
+	if (EnhancedInputComp != nullptr)
+	{
+		EnhancedInputComp->BindAction(IA_Horizontal, ETriggerEvent::Triggered, this, &APlayerPawn::OnInputHorizontal);
+		EnhancedInputComp->BindAction(IA_Horizontal, ETriggerEvent::Completed, this, &APlayerPawn::OnInputHorizontal);
+		EnhancedInputComp->BindAction(IA_Vertical, ETriggerEvent::Triggered, this, &APlayerPawn::OnInputVertical);
+		EnhancedInputComp->BindAction(IA_Vertical, ETriggerEvent::Completed, this, &APlayerPawn::OnInputVertical);
+	}
+}
+
+void APlayerPawn::OnInputHorizontal(const FInputActionValue& Value)
+{
+	float Horizontal = Value.Get<float>();
+	UE_LOG(LogTemp, Warning, TEXT("Horizontal: %f"), Horizontal);
+}
+
+void APlayerPawn::OnInputVertical(const FInputActionValue& Value)
+{
+	float Vertical = Value.Get<float>();
+	UE_LOG(LogTemp, Warning, TEXT("Vertical: %f"), Vertical);
 }
 

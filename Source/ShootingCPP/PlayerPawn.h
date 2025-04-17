@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Pawn.h"
+#include "InputActionValue.h"
 #include "PlayerPawn.generated.h"
 
 UCLASS()
@@ -39,6 +40,19 @@ public:
 
 	// 메시 컴포넌트
 	// 오브젝트에 그래픽 렌더링을 할 수 있게하는 기능
-	UPROPERTY(VisibleAnywhere)
+	UPROPERTY(EditAnywhere)
 	class UStaticMeshComponent* MeshComp;
+
+	UPROPERTY(EditAnywhere)
+	class UInputMappingContext* IMC_PlayerInput;
+
+	UPROPERTY(EditAnywhere)
+	class UInputAction* IA_Horizontal;
+
+	UPROPERTY(EditAnywhere)
+	class UInputAction* IA_Vertical;
+
+private:
+	void OnInputHorizontal(const struct FInputActionValue& Value);
+	void OnInputVertical(const struct FInputActionValue& Value);
 };
