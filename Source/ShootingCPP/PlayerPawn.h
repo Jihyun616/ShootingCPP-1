@@ -68,6 +68,10 @@ public:
 	class UInputAction* IA_Fire;
 
 private:
+	float Horizontal = 0.0f;
+	float Vertical = 0.0f;
+
+private:
 	void OnInputHorizontal(const struct FInputActionValue& Value);
 	void OnInputVertical(const struct FInputActionValue& Value);
 	void Fire();

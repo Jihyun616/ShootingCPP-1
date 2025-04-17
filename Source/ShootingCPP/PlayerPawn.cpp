@@ -52,6 +52,10 @@ void APlayerPawn::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+	FVector Direction = FVector(0.0f, Horizontal, Vertical);
+
+	FVector NewLocation = GetActorLocation() + Direction * MoveSpeed * DeltaTime;
+	SetActorLocation(NewLocation);
 }
 
 // Called to bind functionality to input
@@ -73,20 +77,19 @@ void APlayerPawn::SetupPlayerInputComponent(UInputComponent* PlayerInputComponen
 
 void APlayerPawn::OnInputHorizontal(const FInputActionValue& Value)
 {
-	float Horizontal = Value.Get<float>();
-	UE_LOG(LogTemp, Warning, TEXT("Horizontal: %f"), Horizontal);
+	Horizontal = Value.Get<float>();
 }
 
 void APlayerPawn::OnInputVertical(const FInputActionValue& Value)
 {
-	float Vertical = Value.Get<float>();
-	UE_LOG(LogTemp, Warning, TEXT("Vertical: %f"), Vertical);
+	Vertical = Value.Get<float>();
 }
 
 void APlayerPawn::Fire()
 {
-	ABullet* Bullet GetWorld()->SpawnActor<ABullet>(BulletFactory,
-		FirePosition->GetComponentLocation(), FirePosition->GetComponentLocation());
+	ABullet* Bullet = GetWorld()->SpawnActor<ABullet>(BulletFactory, 
+		FirePosition->GetComponentLocation(), 
+		FirePosition->GetComponentRotation());
 
 	
 	UGameplayStatics::PlaySound2D(GetWorld(), FireSound);
