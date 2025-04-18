@@ -44,6 +44,9 @@ void AEnemyActor::BeginPlay()
 				Direction.Normalize();
 			}
 		}
+
+		if (Direction == FVector::ZeroVector)
+			Direction = GetActorForwardVector();
 	}
 	else
 	{

@@ -42,5 +42,5 @@ public:
 		const FHitResult& SweepResult);
 
 private:
-	FVector Direction;
+	FVector Direction = FVector::ZeroVector;
 };

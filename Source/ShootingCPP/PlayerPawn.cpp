@@ -30,6 +30,7 @@ APlayerPawn::APlayerPawn()
 	BoxComp->SetCollisionResponseToAllChannels(ECR_Ignore);
 
 	BoxComp->SetCollisionResponseToChannel(ECC_GameTraceChannel2, ECR_Overlap);
+	BoxComp->SetCollisionResponseToChannel(ECC_WorldStatic, ECR_Block);
 
 	MeshComp = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("My Static Mesh"));
 	MeshComp->SetupAttachment(BoxComp);
@@ -66,7 +67,7 @@ void APlayerPawn::Tick(float DeltaTime)
 	FVector Direction = FVector(0.0f, Horizontal, Vertical);
 
 	FVector NewLocation = GetActorLocation() + Direction * MoveSpeed * DeltaTime;
-	SetActorLocation(NewLocation);
+	SetActorLocation(NewLocation, true);
 }
 
 // Called to bind functionality to input
