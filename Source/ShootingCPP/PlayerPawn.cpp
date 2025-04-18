@@ -21,6 +21,16 @@ APlayerPawn::APlayerPawn()
 	SetRootComponent(BoxComp);
 	BoxComp->SetBoxExtent(FVector(50.0f, 50.0f, 50.0f));
 
+	BoxComp->SetGenerateOverlapEvents(true);
+
+	BoxComp->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
+
+	BoxComp->SetCollisionObjectType(ECC_GameTraceChannel1);
+
+	BoxComp->SetCollisionResponseToAllChannels(ECR_Ignore);
+
+	BoxComp->SetCollisionResponseToChannel(ECC_GameTraceChannel2, ECR_Overlap);
+
 	MeshComp = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("My Static Mesh"));
 	MeshComp->SetupAttachment(BoxComp);
 
@@ -38,7 +48,8 @@ void APlayerPawn::BeginPlay()
 	if (PlayerController != nullptr)
 	{
 		UEnhancedInputLocalPlayerSubsystem* SubSystem =
-			ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(PlayerController->GetLocalPlayer());
+			ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>
+			(PlayerController->GetLocalPlayer());
 
 		if (SubSystem != nullptr)
 		{
@@ -63,15 +74,21 @@ void APlayerPawn::SetupPlayerInputComponent(UInputComponent* PlayerInputComponen
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 
-	UEnhancedInputComponent* EnhancedInputComp = Cast<UEnhancedInputComponent>(PlayerInputComponent);
+	UEnhancedInputComponent* EnhancedInputComp =
+		Cast<UEnhancedInputComponent>(PlayerInputComponent);
 
 	if (EnhancedInputComp != nullptr)
 	{
-		EnhancedInputComp->BindAction(IA_Horizontal, ETriggerEvent::Triggered, this, &APlayerPawn::OnInputHorizontal);
-		EnhancedInputComp->BindAction(IA_Horizontal, ETriggerEvent::Completed, this, &APlayerPawn::OnInputHorizontal);
-		EnhancedInputComp->BindAction(IA_Vertical, ETriggerEvent::Triggered, this, &APlayerPawn::OnInputVertical);
-		EnhancedInputComp->BindAction(IA_Vertical, ETriggerEvent::Completed, this, &APlayerPawn::OnInputVertical);
-		EnhancedInputComp->BindAction(IA_Fire, ETriggerEvent::Started, this, &APlayerPawn::Fire);
+		EnhancedInputComp->BindAction(IA_Horizontal, ETriggerEvent::Triggered,
+			this, &APlayerPawn::OnInputHorizontal);
+		EnhancedInputComp->BindAction(IA_Horizontal, ETriggerEvent::Completed,
+			this, &APlayerPawn::OnInputHorizontal);
+		EnhancedInputComp->BindAction(IA_Vertical, ETriggerEvent::Triggered,
+			this, &APlayerPawn::OnInputVertical);
+		EnhancedInputComp->BindAction(IA_Vertical, ETriggerEvent::Completed,
+			this, &APlayerPawn::OnInputVertical);
+		EnhancedInputComp->BindAction(IA_Fire, ETriggerEvent::Started,
+			this, &APlayerPawn::Fire);
 	}
 }
 

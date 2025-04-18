@@ -17,6 +17,8 @@ ABullet::ABullet()
 
 	BoxComp->SetWorldScale3D(FVector(0.75f, 0.25f, 1.0f));
 
+	BoxComp->SetCollisionProfileName(TEXT("Bullet"));
+
 	MeshComp = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Mesh Component"));
 	MeshComp->SetupAttachment(BoxComp);
 }

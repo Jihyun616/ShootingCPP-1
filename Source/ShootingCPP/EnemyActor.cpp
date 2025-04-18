@@ -17,6 +17,8 @@ AEnemyActor::AEnemyActor()
 	SetRootComponent(BoxComp);
 	BoxComp->SetBoxExtent(FVector(50.0f, 50.0f, 50.0f));
 
+	BoxComp->SetCollisionProfileName(TEXT("Enemy"));
+
 	MeshComp = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Mesh Component"));
 	MeshComp->SetupAttachment(BoxComp);
 }
