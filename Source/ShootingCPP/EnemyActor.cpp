@@ -6,6 +6,7 @@
 #include "Components/StaticMeshComponent.h"
 #include "EngineUtils.h"
 #include "PlayerPawn.h"
+#include "ShootingGameModeBase.h"
 
 // Sets default values
 AEnemyActor::AEnemyActor()
@@ -74,6 +75,20 @@ void AEnemyActor::OnEnemyOverlap(UPrimitiveComponent* OverlappedComponent, AActo
 	if (Player != nullptr)
 	{
 		Player->Destroy();
+
+		AGameModeBase* CurrentGameMode = GetWorld()->GetAuthGameMode();
+		AShootingGameModeBase* ShootingGameMode =
+			Cast<AShootingGameModeBase>(CurrentGameMode);
+		if (ShootingGameMode != nullptr)
+		{
+			ShootingGameMode->ShowMenu();
+
+			
+		}
+		else
+		{
+			UE_LOG(LogTemp, Warning, TEXT("ShootingGameMode is nullptr"));
+		}
 	}
 
 	Destroy();

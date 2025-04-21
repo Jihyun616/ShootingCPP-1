@@ -4,7 +4,9 @@
 #include "ShootingGameModeBase.h"
 #include "Blueprint/UserWidget.h"
 #include "MainWidget.h"
+#include "MenuWidget.h"
 #include "Components/TextBlock.h"
+#include "Kismet/GameplayStatics.h"
 
 void AShootingGameModeBase::PrintScore()
 {
@@ -36,4 +38,19 @@ void AShootingGameModeBase::AddScore(int32 Point)
 	CurrentScore += Point;
 	UE_LOG(LogTemp, Warning, TEXT("Current Score: %d"), CurrentScore);
 	PrintScore();
+}
+
+void AShootingGameModeBase::ShowMenu()
+{
+	if (MenuWidgetClass != nullptr)
+	{
+		MenuWidget = CreateWidget<UMenuWidget>(GetWorld(), MenuWidgetClass);
+		if (MenuWidget != nullptr)
+		{
+			MenuWidget->AddToViewport();
+
+			UGameplayStatics::SetGamePaused(GetWorld(), true);
+			GetWorld()->GetFirstPlayerController()->SetShowMouseCursor(true);
+		}
+	}
 }
